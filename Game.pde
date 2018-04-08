@@ -77,6 +77,7 @@ class Tablero{
     
     
   }
+
   
   
   private int dimensionPair(){

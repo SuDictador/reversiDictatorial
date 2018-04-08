@@ -44,6 +44,39 @@ class Play {
   public void removeAvailable(FichaGame ficha){ 
     this.available.remove(ficha);
   }
+    
+  public void DrawTab(){
+     int[][] tabD = this.game;
+     for(int y=0;y<this.dimension;y++){
+      for(int x=0;x<this.dimension;x++){
+            
+            if(this.possibleBlack.indexOf(new FichaGame(y,x))!=-1){
+              tabD[y][x] = 2;
+            }
+            
+           
+            System.out.print(" ["+tabD[y][x]+"] ");
+      }
+      System.out.println();
+     }  
+  }
+  
+  public void DrawTaw(){
+     int[][] tabD = this.game;
+     for(int y=0;y<this.dimension;y++){
+      for(int x=0;x<this.dimension;x++){
+            
+            if(this.possibleWhite.indexOf(new FichaGame(y,x))!=-1){
+              tabD[y][x] = 3;
+            }
+            
+            System.out.print(" ["+tabD[y][x]+"] ");
+            
+      }
+      System.out.println();
+     }
+    
+  }
 
   public void pintar(){
     System.out.println("****************PINTANDO*********************");
@@ -72,7 +105,8 @@ class Play {
     right(f,turn);
     up(f,turn);
     down(f,turn);
-    diY(f,turn);
+     diY(f,turn);
+    diYMe(f,turn);
     }
     
     System.out.println("Negras Movimientos");
@@ -84,6 +118,7 @@ class Play {
           System.out.println(cc.toString());
       }
     }
+    //DrawTab();
      System.out.println("FIN Negras Movimientos");
   }
   public void playsWhite(){
@@ -95,7 +130,8 @@ class Play {
     right(f,turn);
     up(f,turn);
     down(f,turn);
-   
+    diY(f,turn);
+    diYMe(f,turn);
     }
      System.out.println("White Movimientos");
    for(FichaGame ff: this.possibleWhite){
@@ -106,6 +142,8 @@ class Play {
           System.out.println(cc.toString());
       }
     }
+    
+   //DrawTaw();
      System.out.println("FIN White Movimientos");
      
   }
@@ -123,10 +161,12 @@ class Play {
           cc.col=1;
            this.game[cc.getY()][cc.getX()]=1;
            this.black.add(cc);
-         
+            //ff.ligadas.remove(cc);
          // cc.drawFichaGame();
           }
+          
       }
+     ff.ligadas.clear();
      ff.col=1;
      this.white.add(ff);
      this.game[Y][X]=1;
@@ -153,7 +193,9 @@ class Play {
            
           //cc.drawFichaGame();
           }
+         
       }
+       ff.ligadas.clear();
      ff.col=-1;
      this.black.add(ff);
      this.game[Y][X]=-1;
@@ -270,7 +312,7 @@ class Play {
   System.out.println("TURNO:"+turn);
   System.out.println(ficha.toString()+"  "+this.game[ficha.getX()][ficha.getY()]);
   FichaGame p = null;
-  for(int X=ficha.getX()+1;X<this.dimension+1;X++){
+  for(int X=ficha.getX()+1;X<this.dimension;X++){
     
     System.out.println(this.game[ficha.getY()][X]);
          if(this.game[ficha.getY()][X]==(turn)){
@@ -370,7 +412,7 @@ class Play {
   System.out.println("TURNO:"+turn);
   System.out.println(ficha.toString()+"  "+this.game[ficha.getX()][ficha.getY()]);
   FichaGame p = null;
-  for(int Y=ficha.getY()+1;Y<this.dimension+1;Y++){
+  for(int Y=ficha.getY()+1;Y<this.dimension;Y++){
     
     System.out.println(this.game[ficha.getX()][Y]);
          if(this.game[ficha.getX()][Y]==(turn)){
@@ -419,7 +461,105 @@ class Play {
   System.out.println("TURNO:"+turn);
   System.out.println(ficha.toString()+"  "+this.game[ficha.getX()][ficha.getY()]);
   FichaGame p = null;
-  for(int Y=ficha.getY()+1, X=ficha.getX()+1;Y<this.dimension+1 && X<this.dimension+1;Y++,X++){
+  for(int Y=ficha.getY()+1, X=ficha.getX()+1;Y<this.dimension && X<this.dimension;Y++,X++){
+    
+    System.out.println(this.game[Y][X]);
+         if(this.game[Y][X]==(turn)){
+           System.out.println("Caso turno igual");
+           System.out.println("Y["+Y+"]["+X+"]X ="+this.game[Y][X]);
+           System.out.println("saliendo");
+           return;
+         } 
+         if(this.game[Y][X]==0){
+           System.out.println("Caso encontramos 0");
+           System.out.println("Y["+Y+"]["+X+"]X ="+this.game[Y][X]);
+           if(this.ligadas.isEmpty()!=true){
+             if(turn == 1){
+              p =  new FichaGame(1,Y,X,ficha.size);
+             p.toString();
+                p.ligadas= new ArrayList<FichaGame>(this.ligadas);
+             //p. drawPosibleW();
+             this.possibleWhite.add(p);
+             
+           }else{
+              p = new FichaGame(0,Y,X,ficha.size);
+              System.out.println(p.toString());
+              System.out.println("posible jugada");
+                 p.ligadas= new ArrayList<FichaGame>(this.ligadas);
+              //p.drawPosibleB();
+              this.possibleBlack.add(p);
+           }               
+           }
+           return; 
+         }
+           if(turn == -1){
+             System.out.println("ligando blanca");
+             this.ligadas.add(new FichaGame(1,Y,X,ficha.size));
+             System.out.println("Y:="+Y+",X:="+X);
+           }else{
+             System.out.println("ligando negra ");
+             System.out.println("Y:="+Y+",X:="+X);
+             this.ligadas.add(new FichaGame(-1,Y,X,ficha.size));
+           }
+         }
+  }
+ 
+ public void diYMe(FichaGame ficha, int turn){
+      this.ligadas.clear();
+  System.out.println("*****************************************"); 
+  System.out.println("TURNO:"+turn);
+  System.out.println(ficha.toString()+"  "+this.game[ficha.getX()][ficha.getY()]);
+  FichaGame p = null;
+  for(int Y=ficha.getY()-1, X=ficha.getX()-1;Y>0 && X>0;Y--,X--){
+    
+    System.out.println(this.game[Y][X]);
+         if(this.game[Y][X]==(turn)){
+           System.out.println("Caso turno igual");
+           System.out.println("Y["+Y+"]["+X+"]X ="+this.game[Y][X]);
+           System.out.println("saliendo");
+           return;
+         } 
+         if(this.game[Y][X]==0){
+           System.out.println("Caso encontramos 0");
+           System.out.println("Y["+Y+"]["+X+"]X ="+this.game[Y][X]);
+           if(this.ligadas.isEmpty()!=true){
+             if(turn == 1){
+              p =  new FichaGame(1,Y,X,ficha.size);
+             p.toString();
+                p.ligadas= new ArrayList<FichaGame>(this.ligadas);
+             //p. drawPosibleW();
+             this.possibleWhite.add(p);
+             
+           }else{
+              p = new FichaGame(0,Y,X,ficha.size);
+              System.out.println(p.toString());
+              System.out.println("posible jugada");
+                 p.ligadas= new ArrayList<FichaGame>(this.ligadas);
+              //p.drawPosibleB();
+              this.possibleBlack.add(p);
+           }               
+           }
+           return; 
+         }
+           if(turn == -1){
+             System.out.println("ligando blanca");
+             this.ligadas.add(new FichaGame(1,Y,X,ficha.size));
+             System.out.println("Y:="+Y+",X:="+X);
+           }else{
+             System.out.println("ligando negra ");
+             System.out.println("Y:="+Y+",X:="+X);
+             this.ligadas.add(new FichaGame(-1,Y,X,ficha.size));
+           }
+         }        
+ }        
+         
+  /*public void diXMe(FichaGame ficha, int turn){
+      this.ligadas.clear();
+  System.out.println("*****************************************"); 
+  System.out.println("TURNO:"+turn);
+  System.out.println(ficha.toString()+"  "+this.game[ficha.getX()][ficha.getY()]);
+  FichaGame p = null;
+  for(int Y=ficha.getY()-1, X=ficha.getX()-1;Y>0 && X>0;Y--,X--){
     
     System.out.println(this.game[Y][X]);
          if(this.game[Y][X]==(turn)){
@@ -459,10 +599,9 @@ class Play {
              System.out.println("Y:="+Y+",X:="+X);
              this.ligadas.add(new FichaGame(-1,Y,X,ficha.size));
            }
-         }
-  }
- 
-  
+         }        
+ }
+ */ 
   
   public void pintarP(){
       

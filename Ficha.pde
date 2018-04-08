@@ -12,7 +12,11 @@ class FichaGame{
     this.size = size;
     this.ligadas = new ArrayList<FichaGame>();
   }
-  
+
+  public FichaGame(int positionY,int positionX){
+    this.positionX = positionX;
+    this.positionY = positionY;
+  }
   
   public void drawFichaGame(){
     
@@ -53,6 +57,7 @@ class FichaGame{
    
    return false;
   }
+ 
 
   public String toString(){   
     String colo = "neutro";
